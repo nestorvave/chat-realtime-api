@@ -14,19 +14,25 @@ import { OnModuleInit } from '@nestjs/common';
 export class ChatGateway implements OnModuleInit {
   @WebSocketServer()
   public server: Server;
-
+  private connectedClients = [];
   constructor(private readonly chatService: ChatService) {}
 
   onModuleInit() {
     this.server.on('connection', (socket: Socket) => {
-      console.log('cliente conectado');
-
-      socket.on('disconnect', () => {
+      console.log(`Cliente conectado. Total: ${this.connectedClients}`);
+      console.log("TOKEN -->",socket.handshake.query.token)
+      socket.on('disconnect', (s) => {
+        console.log("TOKEN DESCONECTADO -->",socket.handshake.query.token)
+        this.connectedClients = this.connectedClients;
         console.log('cliente desconectado');
+      });
+      socket.on('authentication', (f) => {
+        this.connectedClients.push(f);
+        console.log('Token recibido:', f);
+        socket.emit('online', this.connectedClients);
       });
     });
   }
-
   @SubscribeMessage('createChat')
   create(@MessageBody() createChatDto: CreateChatDto) {
     return this.chatService.create(createChatDto);

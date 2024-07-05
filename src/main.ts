@@ -9,6 +9,7 @@ async function main() {
   app.enableCors({ origin: '*' });
   app.useGlobalPipes(new ValidationPipe({}));
   app.enableVersioning({ type: VersioningType.URI });
+  app.setGlobalPrefix('api/v1');
  await app.listen(PORT, () => {
    console.log(`🚀 Application running at port ${PORT}`);
  });
