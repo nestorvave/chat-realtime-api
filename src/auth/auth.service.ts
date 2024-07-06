@@ -3,6 +3,7 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { registerDto } from './dto/register.dto';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class AuthService {
@@ -19,10 +20,10 @@ export class AuthService {
       throw new UnauthorizedException();
     }
     const payload = { sub: _id, username: emailUser };
-    return {
-      access_token: await this.jwtService.signAsync(payload),
-    };
+    const token = await this.createJWT(payload);
+    return { _id, name, email: emailUser, token };
   }
+
   async signUp(register: registerDto): Promise<any> {
     const user = await this.usersService.create(register);
 
@@ -32,10 +33,13 @@ export class AuthService {
     const { _id, email: emailUser, name } = user;
     delete user.password;
 
-    const payload = { sub: _id, username: emailUser };
+    const payload = { sub: _id, username: name };
 
-    // Firmar el token JWT y devolver el usuario con el token
-    const token = await this.jwtService.signAsync(payload);
+    const token = await this.createJWT(payload);
     return { _id, name, email: emailUser, token };
+  }
+
+  private async createJWT(payload: { sub: Types.ObjectId; username: string }) {
+    return await this.jwtService.signAsync(payload);
   }
 }
