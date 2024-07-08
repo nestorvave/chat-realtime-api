@@ -1,16 +1,15 @@
 import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { MessagesService } from './messages.service';
+import { GetMessagesDto } from './dto/get-messages.dto';
 
 @Controller('messages')
 export class MsgController {
   constructor(private readonly msgService: MessagesService) {}
 
-  @Get(':senderId')
-  async getMessages(@Param('senderId') senderId: string) {
+  @Post('get-by-both')
+  async getMessages(@Body() { sender, recipient }: GetMessagesDto) {
     try {
-      console.log('here');
-      console.log(senderId);
-      const messages = await this.msgService.findMsg(senderId); // Convierte userId a número si es necesario
+      const messages = await this.msgService.findMsg(sender, recipient); // Convierte userId a número si es necesario
       return messages;
     } catch (error) {
       console.error('Error al obtener mensajes:', error.message);
