@@ -26,7 +26,6 @@ export class AuthService {
 
   async signUp(register: registerDto): Promise<any> {
     const user = await this.usersService.create(register);
-
     if (user.password !== register.password) {
       throw new UnauthorizedException();
     }

@@ -13,8 +13,8 @@ import { MessagesModule } from './messages/messages.module';
     UsersModule,
     AuthModule,
     MessagesModule,
-    
   ],
+  exports: [],
   controllers: [],
 })
 export class AppModule {}

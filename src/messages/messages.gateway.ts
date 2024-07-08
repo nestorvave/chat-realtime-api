@@ -5,12 +5,11 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { MessagesService } from './messages.service';
-import { CreateMessageDto } from './dto/create-message.dto';
-import { UpdateMessageDto } from './dto/update-message.dto';
 import { Server, Socket } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
-import { OnModuleInit } from '@nestjs/common';
+import { Controller, Get, OnModuleInit, Param } from '@nestjs/common';
 
+Controller('messages')
 @WebSocketGateway({ cors: true })
 export class MessagesGateway implements OnModuleInit {
   @WebSocketServer()
@@ -49,32 +48,24 @@ export class MessagesGateway implements OnModuleInit {
 
   @SubscribeMessage('message')
   async handleMessage(client: Socket, payload: any) {
-    const token = client.handshake.query.token;
-    const sender = await this.decodeJWT(token as string);
-    if (sender?._id) {
-      console.log(`Message from client ${sender?.username}: ${payload} `);
-      this.server.emit('message', payload);
+    try {
+      const token = client.handshake.query.token;
+      const sender = await this.decodeJWT(token as string);
+      const newPayload = JSON.parse(payload);
+      console.log('new payload', newPayload);
+      if (sender?._id) {
+        const msg = await this.messagesService.create({
+          ...newPayload,
+          sender: sender._id,
+        });
+        console.log('hereeee');
+        this.server.emit('message', msg);
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
-  @SubscribeMessage('findAllMessages')
-  findAll() {
-    return this.messagesService.findAll();
-  }
-
-  @SubscribeMessage('findOneMessage')
-  findOne(@MessageBody() id: number) {
-    return this.messagesService.findOne(id);
-  }
-
-  @SubscribeMessage('updateMessage')
-  update(@MessageBody() updateMessageDto: UpdateMessageDto) {
-    return this.messagesService.update(updateMessageDto.id, updateMessageDto);
-  }
-
-  @SubscribeMessage('removeMessage')
-  remove(@MessageBody() id: number) {
-    return this.messagesService.remove(id);
-  }
+  
   private async decodeJWT(token: string) {
     return await this.jwtService.decode(token);
   }
