@@ -19,7 +19,7 @@ export class AuthService {
     if (user?.password !== password) {
       throw new UnauthorizedException();
     }
-    const payload = { sub: _id, username: emailUser };
+    const payload = {  _id, username: emailUser };
     const token = await this.createJWT(payload);
     return { _id, name, email: emailUser, token };
   }
@@ -33,13 +33,16 @@ export class AuthService {
     const { _id, email: emailUser, name } = user;
     delete user.password;
 
-    const payload = { sub: _id, username: name };
+    const payload = { _id, username: name };
 
     const token = await this.createJWT(payload);
     return { _id, name, email: emailUser, token };
   }
 
-  private async createJWT(payload: { sub: Types.ObjectId; username: string }) {
+  private async createJWT(payload: {
+    _id: Types.ObjectId;
+    username: string;
+  }) {
     return await this.jwtService.signAsync(payload);
   }
 }

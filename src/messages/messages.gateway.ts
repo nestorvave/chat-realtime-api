@@ -4,20 +4,20 @@ import {
   MessageBody,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { ChatService } from './chat.service';
-import { CreateChatDto } from './dto/create-chat.dto';
-import { UpdateChatDto } from './dto/update-chat.dto';
+import { MessagesService } from './messages.service';
+import { CreateMessageDto } from './dto/create-message.dto';
+import { UpdateMessageDto } from './dto/update-message.dto';
 import { Server, Socket } from 'socket.io';
-import { OnModuleInit } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { OnModuleInit } from '@nestjs/common';
 
 @WebSocketGateway({ cors: true })
-export class ChatGateway implements OnModuleInit {
+export class MessagesGateway implements OnModuleInit {
   @WebSocketServer()
   public server: Server;
   private connectedClients = [];
   constructor(
-    private readonly chatService: ChatService,
+    private readonly messagesService: MessagesService,
     private jwtService: JwtService,
   ) {}
 
@@ -28,13 +28,17 @@ export class ChatGateway implements OnModuleInit {
       const token = socket.handshake.query.token;
       const decoded = await this.decodeJWT(token as string);
       if (decoded?.username) {
-        this.connectedClients.push(decoded?.username!);
+        console.log(decoded);
+        this.connectedClients.push({
+          username: decoded.username,
+          _id: decoded?._id,
+        });
         this.server.emit('online', this.connectedClients);
       }
 
       socket.on('disconnect', (s) => {
         this.connectedClients = this.connectedClients.filter(
-          (user) => user !== decoded?.username,
+          (user) => user._id !== decoded?._id,
         );
         console.log('clientes des', this.connectedClients);
         this.server.emit('online', this.connectedClients);
@@ -47,30 +51,29 @@ export class ChatGateway implements OnModuleInit {
   async handleMessage(client: Socket, payload: any) {
     const token = client.handshake.query.token;
     const sender = await this.decodeJWT(token as string);
-    if (sender?.username) {
+    if (sender?._id) {
       console.log(`Message from client ${sender?.username}: ${payload} `);
       this.server.emit('message', payload);
     }
   }
-
-  @SubscribeMessage('findAllChat')
+  @SubscribeMessage('findAllMessages')
   findAll() {
-    return this.chatService.findAll();
+    return this.messagesService.findAll();
   }
 
-  @SubscribeMessage('findOneChat')
+  @SubscribeMessage('findOneMessage')
   findOne(@MessageBody() id: number) {
-    return this.chatService.findOne(id);
+    return this.messagesService.findOne(id);
   }
 
-  @SubscribeMessage('updateChat')
-  update(@MessageBody() updateChatDto: UpdateChatDto) {
-    return this.chatService.update(updateChatDto.id, updateChatDto);
+  @SubscribeMessage('updateMessage')
+  update(@MessageBody() updateMessageDto: UpdateMessageDto) {
+    return this.messagesService.update(updateMessageDto.id, updateMessageDto);
   }
 
-  @SubscribeMessage('removeChat')
+  @SubscribeMessage('removeMessage')
   remove(@MessageBody() id: number) {
-    return this.chatService.remove(id);
+    return this.messagesService.remove(id);
   }
   private async decodeJWT(token: string) {
     return await this.jwtService.decode(token);
