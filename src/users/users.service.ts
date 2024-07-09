@@ -13,8 +13,11 @@ export class UsersService {
     return newUser;
   }
 
-  async findOne(email: string) {
+  async findOneByEmail(email: string) {
     return await this.userModel.findOne({ email });
+  }
+  async findOneById(_id: string) {
+    return await this.userModel.findOne({ _id });
   }
 
   remove(id: number) {
