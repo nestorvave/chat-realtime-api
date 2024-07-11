@@ -55,10 +55,17 @@ export class MessagesGateway implements OnModuleInit {
       const token = client.handshake.query.token;
       const sender = await this.decodeJWT(token as string);
       const newPayload = JSON.parse(payload);
+      console.log(sender);
       if (sender?._id) {
+        console.log('PAYLOAD', payload);
+        const owner = await this.userService.findOneById(sender._id);
+        const recipient = await this.userService.findOneById(
+          newPayload.recipient,
+        );
         const msg = await this.messagesService.create({
-          ...newPayload,
-          sender: sender._id,
+          recipient,
+          owner,
+          message: newPayload.message,
         });
         this.server.emit('message', msg);
       }

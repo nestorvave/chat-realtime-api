@@ -11,7 +11,7 @@ export class Message {
     type: User,
     ref: User.name,
   })
-  sender: User;
+  owner: User;
 
   @Prop({
     required: true,

@@ -9,7 +9,8 @@ export class MsgController {
   @Post('get-by-both')
   async getMessages(@Body() { sender, recipient }: GetMessagesDto) {
     try {
-      const messages = await this.msgService.findMsg(sender, recipient); // Convierte userId a número si es necesario
+      const messages = await this.msgService.findMsg(sender, recipient); 
+      
       return messages;
     } catch (error) {
       console.error('Error al obtener mensajes:', error.message);
