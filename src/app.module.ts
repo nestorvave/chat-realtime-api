@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { MessagesModule } from './messages/messages.module';
 import { RoomsModule } from './rooms/rooms.module';
+import { ConversationsModule } from './conversations/conversations.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { RoomsModule } from './rooms/rooms.module';
     AuthModule,
     MessagesModule,
     RoomsModule,
+    ConversationsModule,
   ],
   exports: [],
   controllers: [],

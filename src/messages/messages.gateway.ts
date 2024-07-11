@@ -76,7 +76,7 @@ export class MessagesGateway implements OnModuleInit {
       if (user) {
         const room = await this.roomsService.create({
           name: data.name,
-          connectedUsers: [...data.users, data.createdBy],
+          connected_users: [...data.users, data.createdBy],
         });
         client.broadcast
           .to(room?._id.toString())

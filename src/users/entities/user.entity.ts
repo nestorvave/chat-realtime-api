@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
 @Schema({ versionKey: false, timestamps: true })
 export class User {
@@ -12,7 +13,7 @@ export class User {
   email: string;
 
   @Prop({ type: 'string' })
-  avatarUrl?: string;
+  avatarUrl: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

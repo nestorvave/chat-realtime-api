@@ -4,17 +4,26 @@ import { Message } from 'src/messages/entities/message.entity';
 import { User } from 'src/users/entities/user.entity';
 
 @Schema({ versionKey: false, timestamps: true })
-export class Room {
-  @Prop({ required: true, maxlength: 20, minlength: 5 })
-  name: string;
-
-  @Prop({ type: [{ type: User, ref: User.name }] })
-  connected_users: User[];
+export class Conversation  {
+  @Prop({
+    required: true,
+    type: User,
+    ref: User.name,
+  })
+  recipient: User;
 
   @Prop({
-    type: 'string',
+    required: true,
+    type: User,
+    ref: User.name,
+  })
+  owner: User;
+
+  @Prop({
+    type: "string",
   })
   last_message: User;
+
 }
 
-export const RoomSchema = SchemaFactory.createForClass(Room);
+export const ConversationSchema = SchemaFactory.createForClass(Conversation);

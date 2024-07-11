@@ -3,7 +3,7 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { registerDto } from './dto/register.dto';
-import { Types } from 'mongoose';
+import {  Types } from 'mongoose';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +19,7 @@ export class AuthService {
     if (user?.password !== password) {
       throw new UnauthorizedException();
     }
-    const payload = {  _id, username: emailUser };
+    const payload = { _id, username: emailUser };
     const token = await this.createJWT(payload);
     return { _id, name, email: emailUser, token };
   }
@@ -38,10 +38,7 @@ export class AuthService {
     return { _id, name, email: emailUser, token };
   }
 
-  private async createJWT(payload: {
-    _id: Types.ObjectId;
-    username: string;
-  }) {
+  private async createJWT(payload: { _id: Types.ObjectId; username: string }) {
     return await this.jwtService.signAsync(payload);
   }
 }

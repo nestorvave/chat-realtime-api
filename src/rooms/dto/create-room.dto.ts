@@ -1,4 +1,4 @@
-import { IsArray, IsNotEmpty, IsString } from "class-validator";
+import { IsArray, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { ObjectId } from "mongoose";
 import { User } from "src/users/entities/user.entity";
 
@@ -8,10 +8,11 @@ export class CreateRoomDto {
   name: string;
 
   @IsArray()
-  messages?: string;
+  connected_users: ObjectId[];
 
-  @IsArray()
-  connectedUsers: ObjectId[];
+  @IsString()
+  @IsOptional()
+  lastMessage?: string;
 }
 
 

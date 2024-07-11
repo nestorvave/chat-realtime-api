@@ -17,7 +17,11 @@ export class UsersService {
     return await this.userModel.findOne({ email });
   }
   async findOneById(_id: string) {
-    return await this.userModel.findOne({ _id });
+    return await this.userModel.findOne({ _id })
+  }
+
+  async findAll() {
+    return await this.userModel.find().select('-password');
   }
 
   remove(id: number) {
