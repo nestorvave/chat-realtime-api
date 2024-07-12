@@ -3,7 +3,7 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { registerDto } from './dto/register.dto';
-import {  Types } from 'mongoose';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class AuthService {
@@ -13,9 +13,11 @@ export class AuthService {
   ) {}
 
   async signIn(login: LoginDto): Promise<any> {
+    console.log(login);
     const { password, email } = login;
     const user = await this.usersService.findOneByEmail(email);
-    const { _id, email: emailUser } = user;
+    console.log(user);
+    const { _id, email: emailUser, name } = user;
     if (user?.password !== password) {
       throw new UnauthorizedException();
     }
