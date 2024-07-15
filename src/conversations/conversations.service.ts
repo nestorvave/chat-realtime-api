@@ -5,13 +5,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Conversation } from './entities/conversation.entity';
 import { Model } from 'mongoose';
 import { UsersService } from 'src/users/users.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class ConversationsService {
   constructor(
-    private usersService: UsersService,
     @InjectModel(Conversation.name)
     private conversationModel: Model<Conversation>,
+    private usersService: UsersService,
   ) {}
 
   async create({ owner: sender, recipient: re }: CreateConversationDto) {
@@ -25,6 +26,7 @@ export class ConversationsService {
       const conversation = await this.conversationModel.create({
         owner,
         recipient,
+        last_message: 'Create conversation',
       });
       return conversation;
     } catch (error) {
@@ -35,8 +37,18 @@ export class ConversationsService {
     }
   }
 
-  findAll() {
-    return `This action returns all conversations`;
+  async findAll(userId: string) {
+    try {
+      const conversations = await this.conversationModel.find({
+        $or: [{ 'owner._id': userId }, { 'recipient._id': userId }],
+      });
+      return conversations;
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException(
+        'Unexpected error, check server logs',
+      );
+    }
   }
 
   findOne(id: number) {

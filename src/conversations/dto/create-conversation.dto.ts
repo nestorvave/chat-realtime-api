@@ -14,5 +14,5 @@ export class CreateConversationDto {
 
   @IsString()
   @IsOptional()
-  lastMessage?: string;
+  last_message?: string;
 }

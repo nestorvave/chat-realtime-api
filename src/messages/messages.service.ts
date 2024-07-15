@@ -15,19 +15,16 @@ export class MessagesService {
     return msg;
   }
 
-  async findMsg(sender: string, recipient: string) {
+  async findByConversation(conversation_id: string) {
     try {
       const allMessages = await this.messageModel
         .find({
-          $or: [
-            { sender: sender, recipient: recipient },
-            { sender: recipient, recipient: sender },
-          ],
+          conversation_id,
         })
-        .sort({ createdAt: "asc" });
+        .sort({ createdAt: 'asc' });
       return allMessages;
     } catch (error) {
-      throw error; 
+      throw error;
     }
   }
 }
