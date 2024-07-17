@@ -13,17 +13,22 @@ export class AuthService {
   ) {}
 
   async signIn(login: LoginDto): Promise<any> {
-    console.log(login);
     const { password, email } = login;
     const user = await this.usersService.findOneByEmail(email);
     console.log(user);
-    const { _id, email: emailUser, name } = user;
+    const { _id, email: emailUser, name, avatarUrl } = user;
     if (user?.password !== password) {
       throw new UnauthorizedException();
     }
     const payload = { _id, username: emailUser };
     const token = await this.createJWT(payload);
-    return { _id, name, email: emailUser, token };
+    return {
+      _id,
+      name,
+      email,
+      avatarUrl,
+      token,
+    };
   }
 
   async signUp(register: registerDto): Promise<any> {

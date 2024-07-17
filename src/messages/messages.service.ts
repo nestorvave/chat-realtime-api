@@ -11,6 +11,7 @@ export class MessagesService {
   ) {}
 
   async create(createMessageDto: CreateMessageDto) {
+    console.log('create message', createMessageDto)
     const msg = await this.messageModel.create(createMessageDto);
     return msg;
   }

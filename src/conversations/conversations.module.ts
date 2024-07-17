@@ -10,7 +10,6 @@ import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [
-    UsersModule,
     MongooseModule.forFeature([
       {
         name: Conversation.name,

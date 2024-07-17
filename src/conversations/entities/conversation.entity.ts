@@ -1,23 +1,24 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { SchemaTypes } from 'mongoose';
 import { User } from 'src/users/entities/user.entity';
 
 @Schema({ versionKey: false, timestamps: true })
 export class Conversation {
   @Prop({
     required: true,
-    type: User,
+    type: SchemaTypes.ObjectId,
     ref: User.name,
     unique: false,
   })
-  recipient: User;
+  recipient: string;
 
   @Prop({
     required: true,
-    type: User,
+    type: SchemaTypes.ObjectId,
     ref: User.name,
     unique: false,
   })
-  owner: User;
+  owner: string;
 
   @Prop({
     type: 'string',

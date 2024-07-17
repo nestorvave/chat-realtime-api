@@ -1,19 +1,21 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsEmail, IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { User } from 'src/users/entities/user.entity';
 
 export class CreateMessageDto {
+  @IsString()
   @IsNotEmpty()
-  owner: User;
+  owner: string;
 
   @IsString()
   @IsNotEmpty()
-  recipient: User;
+  recipient: string;
 
   @IsString()
   @IsNotEmpty()
   message: string;
 
+  @IsNotEmpty()
   @IsString()
-  @IsOptional()
-  conversation_id?: string;
+  conversation_id: string | null;
 }

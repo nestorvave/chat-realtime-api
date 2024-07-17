@@ -50,25 +50,22 @@ export class MessagesGateway implements OnModuleInit {
   }
 
   @SubscribeMessage('message')
-  async handleMessage(client: Socket, payload: any) {
+  async handleMessage(_: Socket, payload: string) {
     try {
-      const token = client.handshake.query.token;
-      const sender = await this.decodeJWT(token as string);
-      const newPayload = JSON.parse(payload);
-      console.log(sender);
-      if (sender?._id) {
-        console.log('PAYLOAD', payload);
-        const owner = await this.userService.findOneById(sender._id);
-        const recipient = await this.userService.findOneById(
-          newPayload.recipient,
-        );
-        const msg = await this.messagesService.create({
-          recipient,
-          owner,
-          message: newPayload.message,
-        });
-        this.server.emit('message', msg);
-      }
+      const newPayload: {
+        recipient: string;
+        owner: string;
+        conversation_id: string | null;
+        message: string;
+      } = JSON.parse(payload);
+      const { recipient, owner, conversation_id, message } = newPayload;
+      const msg = await this.messagesService.create({
+        recipient,
+        owner,
+        message,
+        conversation_id,
+      });
+      this.server.emit('message', msg);
     } catch (error) {
       console.log(error);
     }

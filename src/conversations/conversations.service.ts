@@ -4,29 +4,21 @@ import { UpdateConversationDto } from './dto/update-conversation.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Conversation } from './entities/conversation.entity';
 import { Model } from 'mongoose';
-import { UsersService } from 'src/users/users.service';
-import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class ConversationsService {
   constructor(
     @InjectModel(Conversation.name)
     private conversationModel: Model<Conversation>,
-    private usersService: UsersService,
   ) {}
 
-  async create({ owner: sender, recipient: re }: CreateConversationDto) {
+  async create({ owner, recipient }: CreateConversationDto) {
     try {
-      const owner = await this.usersService.findOneById(sender);
-      const recipient = await this.usersService.findOneById(re);
-      delete owner.email;
-      delete recipient.email;
-      delete recipient.password;
-      delete owner.password;
+
       const conversation = await this.conversationModel.create({
         owner,
         recipient,
-        last_message: 'Create conversation',
+        last_message: 'Create a conversation',
       });
       return conversation;
     } catch (error) {
@@ -39,9 +31,12 @@ export class ConversationsService {
 
   async findAll(userId: string) {
     try {
-      const conversations = await this.conversationModel.find({
-        $or: [{ 'owner._id': userId }, { 'recipient._id': userId }],
-      });
+      const conversations = await this.conversationModel
+        .find({
+          $or: [{ owner: userId }, { recipient: userId }],
+        })
+        .populate('recipient')
+        .populate('owner')
       return conversations;
     } catch (error) {
       console.log(error);
