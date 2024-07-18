@@ -10,6 +10,7 @@ import { Controller, OnModuleInit, Param } from '@nestjs/common';
 import { ObjectId } from 'mongoose';
 import { RoomsService } from 'src/rooms/rooms.service';
 import { UsersService } from 'src/users/users.service';
+import { ConversationsService } from 'src/conversations/conversations.service';
 
 Controller('messages');
 @WebSocketGateway({ cors: true })
@@ -19,6 +20,7 @@ export class MessagesGateway implements OnModuleInit {
     private jwtService: JwtService,
     private readonly roomsService: RoomsService,
     private readonly userService: UsersService,
+    private readonly conversationService: ConversationsService,
   ) {}
 
   @WebSocketServer()
@@ -59,6 +61,7 @@ export class MessagesGateway implements OnModuleInit {
         message,
         conversation_id,
       });
+      await this.conversationService.updateLastMessage(conversation_id, message);
       this.server.emit('message', msg);
     } catch (error) {
       console.log(error);

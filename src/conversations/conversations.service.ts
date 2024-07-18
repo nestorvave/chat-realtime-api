@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateConversationDto } from './dto/create-conversation.dto';
 import { UpdateConversationDto } from './dto/update-conversation.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -68,11 +72,29 @@ export class ConversationsService {
     }
   }
 
-  update(id: number, updateConversationDto: UpdateConversationDto) {
-    return `This action updates a #${id} conversation`;
+  async updateLastMessage(id: string, last_message: string) {
+    try {
+      const conversation = await this.conversationModel.findByIdAndUpdate(
+        id,
+        {
+          last_message,
+        },
+        { new: true },
+      );
+      return conversation;
+    } catch (error) {
+      console.error('Error en update:', error);
+      throw error;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} conversation`;
+  async find(id: string) {
+    const conversation = await this.conversationModel.findById({ id });
+    if (!conversation)
+      throw new NotFoundException(
+        `Conversation with ${conversation} not found`,
+      );
+
+    return conversation;
   }
 }

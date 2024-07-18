@@ -24,22 +24,4 @@ export class ConversationsController {
   findAll(@Param('id') id: string) {
     return this.conversationsService.findAll(id);
   }
-
-/*   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.conversationsService.findOne(+id);
-  }
- */
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateConversationDto: UpdateConversationDto,
-  ) {
-    return this.conversationsService.update(+id, updateConversationDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.conversationsService.remove(+id);
-  }
 }

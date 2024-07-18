@@ -9,6 +9,7 @@ import { UsersModule } from 'src/users/users.module';
 import { RoomsService } from 'src/rooms/rooms.service';
 import { RoomsModule } from 'src/rooms/rooms.module';
 import { UsersService } from 'src/users/users.service';
+import { ConversationsModule } from 'src/conversations/conversations.module';
 
 
 
@@ -22,6 +23,7 @@ import { UsersService } from 'src/users/users.service';
     ]),
     UsersModule,
     RoomsModule,
+    ConversationsModule
   ],
   providers: [MessagesGateway, MessagesService],
   exports: [MessagesService],
