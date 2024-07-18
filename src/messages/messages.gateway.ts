@@ -7,10 +7,7 @@ import { MessagesService } from './messages.service';
 import { Server, Socket } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
 import { Controller, OnModuleInit, Param } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Room } from 'src/rooms/entities/room.entity';
-import { Model, ObjectId } from 'mongoose';
-import { User } from 'src/users/entities/user.entity';
+import { ObjectId } from 'mongoose';
 import { RoomsService } from 'src/rooms/rooms.service';
 import { UsersService } from 'src/users/users.service';
 
@@ -33,16 +30,13 @@ export class MessagesGateway implements OnModuleInit {
       const token = socket.handshake.query.token;
       const decoded = await this.decodeJWT(token as string);
       if (decoded?.username) {
-        this.connectedClients.push({
-          username: decoded.username,
-          _id: decoded?._id,
-        });
+        this.connectedClients.push(decoded?._id);
         this.server.emit('online', this.connectedClients);
       }
 
       socket.on('disconnect', (s) => {
         this.connectedClients = this.connectedClients.filter(
-          (user) => user._id !== decoded?._id,
+          (user) => user !== decoded?._id,
         );
         this.server.emit('online', this.connectedClients);
       });

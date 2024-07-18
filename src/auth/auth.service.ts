@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { registerDto } from './dto/register.dto';
 import { Types } from 'mongoose';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {

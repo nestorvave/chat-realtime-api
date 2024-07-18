@@ -25,11 +25,11 @@ export class ConversationsController {
     return this.conversationsService.findAll(id);
   }
 
-  @Get(':id')
+/*   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.conversationsService.findOne(+id);
   }
-
+ */
   @Patch(':id')
   update(
     @Param('id') id: string,

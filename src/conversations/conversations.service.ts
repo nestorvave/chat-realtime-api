@@ -14,8 +14,9 @@ export class ConversationsService {
 
   async create({ owner, recipient }: CreateConversationDto) {
     try {
-
-      const conversation = await this.conversationModel.create({
+      let conversation = await this.findOne(owner, recipient);
+      if (conversation) return conversation;
+      conversation = await this.conversationModel.create({
         owner,
         recipient,
         last_message: 'Create a conversation',
@@ -37,6 +38,8 @@ export class ConversationsService {
         })
         .populate('recipient')
         .populate('owner')
+        .sort({ updatedAt: -1 });
+
       return conversations;
     } catch (error) {
       console.log(error);
@@ -46,8 +49,23 @@ export class ConversationsService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} conversation`;
+  async findOne(owner: string, recipient: string) {
+    try {
+      const conversation = await this.conversationModel
+        .findOne({
+          $or: [
+            { $and: [{ owner: owner }, { recipient: recipient }] },
+            { $and: [{ owner: recipient }, { recipient: owner }] },
+          ],
+        })
+        .populate('recipient')
+        .populate('owner');
+
+      return conversation;
+    } catch (error) {
+      console.error('Error en findOne:', error);
+      throw error;
+    }
   }
 
   update(id: number, updateConversationDto: UpdateConversationDto) {
