@@ -1,20 +1,26 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
-import { Message } from 'src/messages/entities/message.entity';
+import { ObjectId, SchemaTypes } from 'mongoose';
 import { User } from 'src/users/entities/user.entity';
 
 @Schema({ versionKey: false, timestamps: true })
 export class Room {
-  @Prop({ required: true, maxlength: 20, minlength: 5 })
+  @Prop({ required: true, maxlength: 20, minlength: 5, unique: false })
   name: string;
 
-  @Prop({ type: [{ type: User, ref: User.name }] })
-  connected_users: User[];
+  @Prop({
+    type: [{ type: SchemaTypes.ObjectId, ref: User.name }],
+    required: true,
+    unique: false,
+  })
+  users: string[];
 
   @Prop({
-    type: 'string',
+    required: true,
+    type: SchemaTypes.ObjectId,
+    ref: User.name,
+    unique: false,
   })
-  last_message: User;
+  owner: string;
 }
 
 export const RoomSchema = SchemaFactory.createForClass(Room);

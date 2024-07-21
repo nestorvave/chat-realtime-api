@@ -7,12 +7,13 @@ export class CreateRoomDto {
   @IsString()
   name: string;
 
+  @IsNotEmpty()
   @IsArray()
-  connected_users: ObjectId[];
+  users: string[];
 
   @IsString()
-  @IsOptional()
-  lastMessage?: string;
+  @IsNotEmpty()
+  owner: string;
 }
 
 

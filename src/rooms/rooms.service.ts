@@ -12,7 +12,14 @@ export class RoomsService {
   ) {}
 
   async create(createRoomDto: CreateRoomDto) {
-    return await this.roomsModel.create(createRoomDto);
+    try {
+      const room = await this.roomsModel.create(createRoomDto);
+      console.log("----");
+      console.log(room);
+      return room;
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   findAll() {
