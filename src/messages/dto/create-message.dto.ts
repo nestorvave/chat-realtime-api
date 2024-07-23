@@ -1,6 +1,4 @@
-import { Type } from 'class-transformer';
-import { IsEmail, IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator';
-import { User } from 'src/users/entities/user.entity';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateMessageDto {
   @IsString()
@@ -8,8 +6,9 @@ export class CreateMessageDto {
   owner: string;
 
   @IsString()
+  @IsString({ each: true })
   @IsNotEmpty()
-  recipient: string;
+  recipient: string | string[];
 
   @IsString()
   @IsNotEmpty()

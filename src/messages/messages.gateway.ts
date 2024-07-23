@@ -56,7 +56,7 @@ export class MessagesGateway implements OnModuleInit {
   async handleMessage(_: Socket, @MessageBody() payload: string) {
     try {
       const newPayload: {
-        recipient: string;
+        recipient: string | string[];
         owner: string;
         conversation_id: string | null;
         room_id: string | null;
@@ -64,7 +64,6 @@ export class MessagesGateway implements OnModuleInit {
       } = JSON.parse(payload);
       const { recipient, owner, conversation_id, message, room_id } =
         newPayload;
-      console.log('new', newPayload);
       const msg = await this.messagesService.create({
         recipient,
         owner,
@@ -72,7 +71,6 @@ export class MessagesGateway implements OnModuleInit {
         conversation_id: conversation_id ? conversation_id : null,
         room_id: room_id ? room_id : null,
       });
-      console.log(msg);
       if (conversation_id) {
         await this.conversationService.updateLastMessage(
           conversation_id,

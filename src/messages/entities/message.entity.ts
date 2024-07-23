@@ -13,12 +13,12 @@ export class Message {
   })
   owner: string;
 
-  @Prop({
+  @Prop([{
     required: true,
-    type: SchemaTypes.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: User.name,
-  })
-  recipient: string;
+  }])
+  recipient: mongoose.Schema.Types.ObjectId | mongoose.Schema.Types.ObjectId[];
 
   @Prop({ required: true, type: 'string' })
   message: string;
