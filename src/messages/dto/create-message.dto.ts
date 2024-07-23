@@ -18,4 +18,8 @@ export class CreateMessageDto {
   @IsNotEmpty()
   @IsString()
   conversation_id: string | null;
+
+  @IsNotEmpty()
+  @IsString()
+  room_id: string | null;
 }

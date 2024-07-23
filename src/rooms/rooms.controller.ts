@@ -18,6 +18,10 @@ export class RoomsController {
   }
 
   @Get(':id')
+  findByUser(@Param('id') id: string) {
+    return this.roomsService.findByUser(id);
+  }
+  @Get(':id')
   findOne(@Param('id') id: string) {
     return this.roomsService.findOne(+id);
   }

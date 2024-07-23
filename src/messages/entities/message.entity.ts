@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { SchemaTypes } from 'mongoose';
+import { Conversation } from 'src/conversations/entities/conversation.entity';
 import { Room } from 'src/rooms/entities/room.entity';
 import { User } from 'src/users/entities/user.entity';
 
@@ -25,12 +26,14 @@ export class Message {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: Room.name,
+    default: null,
   })
   room_id?: string;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    ref: Room.name,
+    ref: Conversation.name,
+    default: null,
   })
   conversation_id?: string;
 }

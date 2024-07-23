@@ -14,8 +14,6 @@ export class RoomsService {
   async create(createRoomDto: CreateRoomDto) {
     try {
       const room = await this.roomsModel.create(createRoomDto);
-      console.log("----");
-      console.log(room);
       return room;
     } catch (error) {
       console.error(error);
@@ -26,6 +24,24 @@ export class RoomsService {
     return `This action returns all rooms`;
   }
 
+  async findByUser(id: string) {
+    try {
+      const rooms = await this.roomsModel
+        .find({
+          $or: [{ owner: id }, { users: { $elemMatch: { $eq: id } } }],
+        })
+        .populate('users')
+        .exec();
+
+      if (rooms.length === 0) {
+        return [];
+      }
+
+      return rooms;
+    } catch (error) {
+      console.log(error);
+    }
+  }
   findOne(id: number) {
     return `This action returns a #${id} room`;
   }

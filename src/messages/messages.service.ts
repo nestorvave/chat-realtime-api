@@ -11,7 +11,6 @@ export class MessagesService {
   ) {}
 
   async create(createMessageDto: CreateMessageDto) {
-    console.log('create message', createMessageDto)
     const msg = await this.messageModel.create(createMessageDto);
     return msg;
   }
@@ -20,7 +19,10 @@ export class MessagesService {
     try {
       const allMessages = await this.messageModel
         .find({
-          conversation_id,
+          $or: [
+            { conversation_id: conversation_id },
+            { room_id: conversation_id },
+          ],
         })
         .sort({ createdAt: 'asc' });
       return allMessages;
