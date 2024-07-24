@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ObjectId, SchemaTypes } from 'mongoose';
+import { SchemaTypes } from 'mongoose';
 import { User } from 'src/users/entities/user.entity';
 
 @Schema({ versionKey: false, timestamps: true })

@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { RoomsService } from './rooms.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
@@ -12,9 +20,9 @@ export class RoomsController {
     return this.roomsService.create(createRoomDto);
   }
 
-  @Get()
-  findAll() {
-    return this.roomsService.findAll();
+  @Get(':id')
+  findAll(@Param('id') id: string) {
+    return this.roomsService.findByUser(id);
   }
 
   @Get(':id')

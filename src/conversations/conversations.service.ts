@@ -4,7 +4,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateConversationDto } from './dto/create-conversation.dto';
-import { UpdateConversationDto } from './dto/update-conversation.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Conversation } from './entities/conversation.entity';
 import { Model } from 'mongoose';
@@ -25,6 +24,8 @@ export class ConversationsService {
         recipient,
         last_message: 'Create a conversation',
       });
+      await conversation.populate('recipient');
+      await conversation.populate('owner');
       return conversation;
     } catch (error) {
       console.log(error);

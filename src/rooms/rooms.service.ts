@@ -47,7 +47,7 @@ export class RoomsService {
   }
 
   update(id: number, updateRoomDto: UpdateRoomDto) {
-    return `This action updates a #${id} room`;
+    return `This action updates a #${updateRoomDto} room`;
   }
 
   remove(id: number) {

@@ -14,6 +14,10 @@ export class UsersController {
   findOne(@Param('email') email: string) {
     return this.usersService.findOneById(email);
   }
+  @Get(':id')
+  async findById(@Param('id') id: string) {
+    return this.usersService.findOneById(id);
+  }
   @Get()
   findAll() {
     return this.usersService.findAll();

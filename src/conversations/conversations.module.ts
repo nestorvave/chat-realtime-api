@@ -6,7 +6,7 @@ import {
   Conversation,
   ConversationSchema,
 } from './entities/conversation.entity';
-import { UsersModule } from 'src/users/users.module';
+
 
 @Module({
   imports: [

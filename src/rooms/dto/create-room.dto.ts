@@ -1,6 +1,4 @@
-import { IsArray, IsNotEmpty, IsOptional, IsString } from "class-validator";
-import { ObjectId } from "mongoose";
-import { User } from "src/users/entities/user.entity";
+import { IsArray, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateRoomDto {
   @IsNotEmpty()
@@ -15,5 +13,3 @@ export class CreateRoomDto {
   @IsNotEmpty()
   owner: string;
 }
-
-

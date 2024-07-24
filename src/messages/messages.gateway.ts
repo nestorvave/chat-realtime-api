@@ -7,12 +7,9 @@ import {
 import { MessagesService } from './messages.service';
 import { Server, Socket } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
-import { Controller, OnModuleInit, Param } from '@nestjs/common';
-import mongoose, { ObjectId } from 'mongoose';
+import { Controller, OnModuleInit } from '@nestjs/common';
 import { RoomsService } from 'src/rooms/rooms.service';
-import { UsersService } from 'src/users/users.service';
 import { ConversationsService } from 'src/conversations/conversations.service';
-import { Room } from 'src/rooms/entities/room.entity';
 
 Controller('messages');
 @WebSocketGateway({ cors: true })
@@ -43,7 +40,7 @@ export class MessagesGateway implements OnModuleInit {
         this.server.emit('online', this.connectedClients);
       }
 
-      socket.on('disconnect', (s) => {
+      socket.on('disconnect', () => {
         this.connectedClients = this.connectedClients.filter(
           (user) => user !== decoded?._id,
         );
@@ -92,9 +89,8 @@ export class MessagesGateway implements OnModuleInit {
     payload: string,
   ) {
     try {
-      let newPayload = JSON.parse(payload);
+      const newPayload = JSON.parse(payload);
       const room = await this.roomsService.create(newPayload);
-      console.log(room);
       if (room._id) {
         this.server.emit('room-created', room._id);
       }

@@ -13,11 +13,13 @@ export class Message {
   })
   owner: string;
 
-  @Prop([{
-    required: true,
-    type: mongoose.Schema.Types.ObjectId,
-    ref: User.name,
-  }])
+  @Prop([
+    {
+      required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: User.name,
+    },
+  ])
   recipient: mongoose.Schema.Types.ObjectId | mongoose.Schema.Types.ObjectId[];
 
   @Prop({ required: true, type: 'string' })
