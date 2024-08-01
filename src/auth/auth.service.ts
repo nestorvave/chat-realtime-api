@@ -20,7 +20,6 @@ export class AuthService {
     try {
       const { password, email, isGoogle } = login;
       const user = await this.usersService.findOneByEmail(email);
-      console.log(user);
       if (!user && isGoogle) {
         const newUser = await this.usersService.create(login as registerDto);
         const payload = { _id: newUser._id, username: newUser.email };
@@ -37,7 +36,7 @@ export class AuthService {
         throw new BadRequestException('User is not registered');
       }
       const { _id, email: emailUser, name, avatarUrl } = user;
-      if (user?.password !== password) {
+      if (user?.password !== password && !isGoogle) {
         throw new UnauthorizedException();
       }
       const payload = { _id, username: emailUser };

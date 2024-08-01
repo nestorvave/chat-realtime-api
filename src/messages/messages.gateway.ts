@@ -90,11 +90,17 @@ export class MessagesGateway implements OnModuleInit {
   ) {
     try {
       const newPayload = JSON.parse(payload);
-      const room = await this.roomsService.create(newPayload);
+      let room = await this.roomsService.create(newPayload);
+      room = await room.populate('users');
       if (room._id) {
-        this.server.emit('room-created', room._id);
+        this.server.emit('room-created', room);
       }
     } catch (error) {}
+  }
+
+  @SubscribeMessage('getOnlineUsers')
+  onlineUsers() {
+    this.server.emit('online', this.connectedClients);
   }
 
   private async decodeJWT(token: string) {
