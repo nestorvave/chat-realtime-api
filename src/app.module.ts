@@ -11,7 +11,7 @@ import { ConversationsModule } from './conversations/conversations.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.DATABASE_URI_PROD),
+    MongooseModule.forRoot(process.env.DATABASE_URI),
     UsersModule,
     AuthModule,
     MessagesModule,
